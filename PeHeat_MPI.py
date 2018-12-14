@@ -13,7 +13,7 @@ import parametric_PeHeat as parPeH
 from pynverse import inversefunc
 import compute_charge_dist as fz
 
-
+start_time = time.time()
 comm = MPI.COMM_WORLD
 
 pos       = comm.Get_rank()
@@ -237,7 +237,7 @@ results = comm.gather(HeatDict, root=0)
 # Append the dictionaries and save the file.
 if pos == 0:
     peHDict        = dict(results[0])
-    peHDict["MPI"] = "MPI calculation of the photoelectric heating in %i procs" %(size)
+    peHDict["MPI"] = "MPI calculation of the photoelectric heating in %i procs" %(num_procs)
     
     # Loop over all procesors to concatenate the data.
     for proc in range(num_procs-1):
@@ -248,11 +248,17 @@ if pos == 0:
                 peHDict[field] = np.append(peHDict[field], results[proc+1][field])
 
     # Now save the dict
-        #outname = "fz_%.4iAA_%s_CR_%s.pkl"%(grain_size, grain_type, include_CR)
-        print("Saving total calculation of the photoelectric heating %s/%s"%(outdir, outname))
-        outfile = open('%s/%s'%(outdir, outname), 'wb')
-        pickle.dump(peHDict, outfile)
-        outfile.close()
-        end_time = time.time()
-        print("Total CPU time used to calculate the photoelectric heating of grain in %i cells with %i processors = %.2f hours"%(n5, num_procs, (end_time - start_time)*num_procs/3600.))
-
+    #outname = "fz_%.4iAA_%s_CR_%s.pkl"%(grain_size, grain_type, include_CR)
+    outfile = open('%s/%s'%(outdir, outname), 'wb')
+    pickle.dump(peHDict, outfile)
+    outfile.close()
+    end_time = time.time()
+    print("")
+    print("------------------ Done ----------------------")
+    print("Saving total calculation of the photoelectric heating %s/%s"%(outdir, outname))
+    print("Number of cells sampled: %i"%n5)
+    print("Number of cores used:    %i"%num_procs)
+    print("Time per core (hours):   %.2f"%((end_time - start_time)/3600.))
+    print("Total CPU hours:         %.2f"%((end_time - start_time)*num_procs/3600.))
+    print("----------------------------------------------")
+    print("")
