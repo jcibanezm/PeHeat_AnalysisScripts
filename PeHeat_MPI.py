@@ -23,23 +23,24 @@ num_procs = comm.Get_size()
 ###################################################################################
 # Changeable variables
 ###################################################################################
-percent    = 0.1
+percent    = 50
 
 # Where the flash data is located
-data_dir   = "/Users/juan/codes/run/Silcc/CF_Prabesh"      # Laptop
-#data_dir   = "/home/jcibanezm/codes/run/Silcc/CF_Prabesh" # DustBox
+#data_dir   = "/Users/juan/codes/run/Silcc/CF_Prabesh"      # Laptop
+data_dir   = "/home/jcibanezm/codes/run/Silcc/CF_Prabesh" # DustBox
 #data_dir = "/data/gamera/jcibanezm/DustAnalysis/CF_Data"  # Daikaiju
 #data_dir = "/data/gamera/jcibanezm/DustAnalysis/CF_Data"  # Odin
 
-filename   = data_dir + "/NL99_R8_cf_hdf5_chk_0028"
+#filename   = data_dir + "/NL99_R8_cf_hdf5_chk_0028"
+filename = data_dir+"/CF99_R10_hdf5_chk_0020"
 
 # Where the dictionary is going to be saved
-outdir = "/Users/juan/codes/run/PeHeating"                         # Laptop
-#outdir  = "/home/jcibanezm/codes/run/ChargeStatisticsAnalysis/CR" # DustBox
+#outdir = "/Users/juan/codes/run/PeHeating"                         # Laptop
+outdir  = "/home/jcibanezm/codes/run/PeHeat/ParametricHeating" # DustBox
 #outdir = "/data/gamera/jcibanezm/DustAnalysis"                    # Daikaiju
 #outdir = "/data/gamera/jcibanezm/DustAnalysis"                    # Odin
 
-outname = "TotaHeating.pkl"
+outname = "TotaHeating_parametric_%ipcent.pkl"%(percent)
 
 ###################################################################################
 #
