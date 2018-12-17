@@ -11,7 +11,7 @@ num_procs = comm.Get_size()
 # User defined variables
 #########################################################################
 
-filename = "TotaHeating.pkl"
+filename = "TotaHeating_parametric_0pcent.pkl"
 data_dir = "/Users/juan/codes/run/PeHeating"
 
 outdir = "/Users/juan/codes/run/PeHeating"                         # Laptop
@@ -25,11 +25,16 @@ percent = 100
 
 #########################################################################
 
+if pos == 0:
+    print("")
+    print("===========================================================================")
+    print(" Running the calculation of the percentiles of the photoelectric heating")
+    print("===========================================================================")
+    print("")
 
 pkl_file = open("%s/%s"%(data_dir, filename), "rb")
 PeH_dict = pickle.load(pkl_file)
 pkl_file.close
-
 
 def get_percentiles(Gtot, temp, ne, amin=3.5, amax=2500, numint=100):
     """
@@ -108,7 +113,12 @@ ncells          = len(PeH_dict["nH"])
 nsub            = np.int(ncells * percent/100.)
 cells_per_proc =  nsub // num_procs
 
-if pos == num_procs:
+if pos == 0:
+    print("Number of processors = %i"%num_procs)
+    print("Cells per processor  = %i"%cells_per_proc)
+    print("Total number of cells= %i"%nsub)
+
+if pos == num_procs-1:
     if (pos+1)*cells_per_proc < nsub:
         missing_cells = (nsub - (pos+1)*cells_per_proc)
         cells_per_proc += missing_cells
@@ -122,6 +132,9 @@ size50 = np.zeros(cells_per_proc, dtype=np.float)
 size95 = np.zeros(cells_per_proc, dtype=np.float)
 
 for i in range(cells_per_proc):
+    if pos == 0:
+        if (i*10.%cells_per_proc==0):
+            print("Progress %i"%(i*100.//cells_per_proc))
     size50[i], size95[i] = get_percentiles(PeH_dict["Gtot"][i], PeH_dict["temp"][i], PeH_dict["new_ne"][i])
 
 
