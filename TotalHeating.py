@@ -268,9 +268,9 @@ def netHeating_full(grain_size, grain_type, nH, temp, xe, xH2, Ntot, NH2, G0=1.7
         outfile = open('%s'%(filename), 'wb')
         pickle.dump(dictionary, outfile)
         outfile.close()
-            
+
     #return netHeating, Cooling, ZZfz, ffzCR
-    return netHeating
+    return Heating
 
 
 def get_Gamma_tot_Full(nH, temp, xe, xH2, Ntot, NH2, amin, amax, G0=1.7, numint=50, save_output=False, outdir="default"):
