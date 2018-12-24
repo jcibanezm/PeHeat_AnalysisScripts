@@ -1,19 +1,30 @@
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
+
+from yt.config import ytcfg;ytcfg["yt","__withinreason"]="True"
+import os
+import uuid
+
+#from yt.config import ytcfg;ytcfg["yt","__withinreason"]="True"
+#import os
+#import uuid
+
 import compute_charge_dist as fz
 import numpy as np
-import matplotlib.pyplot as plt
 import scipy.integrate as integrate
 
-import PeHeat_Functions as peh
-import parametric_fz as fzpar
-import dust_size_dist as sizedist
+#import PeHeat_Functions as peh
+#import parametric_fz as fzpar
+#import dust_size_dist as sizedist
 
 import yt
 from yt.units import pc, kpc, second, Kelvin, gram, erg, cm
 
 ##########################################################
 # Input variables.
-#data_dir   = "/home/jcibanezm/codes/run/Silcc/CF_Prabesh"
-data_dir   = "/Users/juan/codes/run/Silcc/CF_Prabesh"
+data_dir   = "/home/jcibanezm/codes/run/Silcc/CF_Prabesh"
+#data_dir   = "/Users/juan/codes/run/Silcc/CF_Prabesh"
 
 ##########################################################
 
@@ -168,6 +179,14 @@ xCp = np.array( box["xCp"]  [indexarr])
 Av  = np.array( box["cdto"][indexarr])
 fH2shield  = np.array( box["cdh2"][indexarr])
 
+G0 = 1.7
+Ntot =  Av * 1.87e21
+
+NH2 = np.zeros_like(nH2)
+for i in range(3):
+    NH2[i] = fz.get_NH2(fH2shield[i], temp[i])
+
+
 
 ###################################################
 
@@ -175,7 +194,7 @@ def netHeating_full(grain_size, grain_type, nH, temp, xe, xH2, Ntot, NH2, G0=1.7
     """
     Perform the full calculation of the net heating by a single grain given the ISM ambient parameters.
     """
-    import cPickle as pickle
+    import _pickle as pickle
     import compute_charge_dist as fz
     import numpy as np
     import PeHeat_Functions as peh
@@ -296,6 +315,12 @@ def get_Gamma_tot_Full(nH, temp, xe, xH2, Ntot, NH2, amin, amax, G0=1.7, numint=
     
     return Gamma_tot
 
+
+print("")
+print("----------------------------------------------")
+print("Starting the calculation of the total heating")
+print("----------------------------------------------")
+print("")
 
 Gtot_CNM = get_Gamma_tot_Full(nH[1], temp[1], xe[1], xH2[1], Ntot[1], NH2[1], 3.5, 2500, numint=50, save_output=True)
 Gtot_CMM = get_Gamma_tot_Full(nH[2], temp[2], xe[2], xH2[2], Ntot[2], NH2[2], 3.5, 2500, numint=50, save_output=True)
